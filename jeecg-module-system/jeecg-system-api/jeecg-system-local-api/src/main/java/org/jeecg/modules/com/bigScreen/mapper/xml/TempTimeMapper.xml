@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.com.bigScreen.mapper.TempTimeMapper">
+
+<!--    <select id="queryTotalReceipt" resultType="java.util.Map">-->
+<!--        select channel_name ,count(*) from rvp_notify where send_time <![CDATA[ > ]]>#{startTime} and send_time <![CDATA[ < ]]> #{endTime} group by channel_name-->
+<!--    </select>-->
+</mapper>

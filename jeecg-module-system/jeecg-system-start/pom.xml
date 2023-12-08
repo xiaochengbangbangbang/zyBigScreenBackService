@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jeecg-system-start</artifactId>
+    <packaging>war</packaging>
     
     <dependencies>
         <!-- SYSTEM 系统管理模块 -->
@@ -19,20 +20,20 @@
             <version>${jeecgboot.version}</version>
         </dependency>
         <!-- DEMO 示例模块 -->
-        <dependency>
-            <groupId>org.jeecgframework.boot</groupId>
-            <artifactId>jeecg-module-demo</artifactId>
-            <version>${jeecgboot.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jeecgframework.boot</groupId>-->
+<!--&lt;!&ndash;            <artifactId>jeecg-module-demo</artifactId>&ndash;&gt;-->
+<!--            <version>${jeecgboot.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 </project>

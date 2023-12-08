@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.com.bigScreen.mapper.RvpNotifyMapper">
+<!--折线图-->
+    <resultMap id="queryChannelLine" type="org.jeecg.modules.com.bigScreen.Domain.ChannelLineDomain">
+        <result column="shortSms" property="shortSms" />
+        <result column="count" property="count" />
+    </resultMap>
+    <select id="selectChannelLine" parameterType="java.lang.String" resultType="org.jeecg.modules.com.bigScreen.Domain.ChannelLineDomain">
+        select count(*),short_sms
+        FROM rvp_notify
+        <where>
+            1=1
+            <if test="startTime != ''">
+                and send_time >= #{startTime}
+            </if>
+            <if test="endTime != ''">
+                and send_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <if test="channelName != ''">
+                and channel_name = #{channelName}
+            </if>
+            <if test="ifSuccess == true">
+                and (deliver_code = '0' OR deliver_code = 'deliver')
+            </if>
+        </where>
+        GROUP BY
+        short_sms
+        ORDER BY
+        short_sms
+        asc;
+    </select>
+    <select id="selectChannelQua" parameterType="java.lang.String" resultType="org.jeecg.modules.com.bigScreen.Domain.ChannelLineDomain">
+        select count(*), channel_name
+        FROM rvp_notify
+        <where>
+            1=1
+            <if test="endTime != ''">
+                and send_time >= #{endTime}
+            </if>
+            <if test="ifSuccess == true">
+                and (deliver_code = '0' OR deliver_code = 'deliver')
+            </if>
+        </where>
+        GROUP BY
+        channel_name
+        ORDER BY
+        channel_name
+        asc;
+    </select>
+    <select id="countByIsp" parameterType="java.lang.String" resultType="org.jeecg.modules.com.bigScreen.Domain.ChannelLineDomain">
+        select count(*), isp
+        FROM rvp_notify
+        <where>
+            1=1
+            <if test="endTime != ''">
+                and send_time >= #{endTime}
+            </if>
+            and short_sms = #{type}
+            and isp is not null
+            <if test="ifSuccess == true">
+                and (deliver_code = '0' OR deliver_code = 'deliver')
+            </if>
+        </where>
+        GROUP BY
+        isp
+        ORDER BY
+        isp
+        asc;
+    </select>
+    <select id="queryMapCountAll" parameterType="java.lang.String" resultType="org.jeecg.modules.com.bigScreen.Domain.MapDomain">
+        SELECT province,isp,COUNT(*)
+        from rvp_notify
+        <where>
+            1=1
+            <if test="endTime != ''">
+                and send_time >= #{endTime}
+            </if>
+            AND province is not null
+            AND isp is not null
+            <if test="ifSuccess == true">
+                and (deliver_code = '0' OR deliver_code = 'deliver')
+            </if>
+        </where>
+        GROUP BY province,isp
+        ORDER BY province,isp;
+    </select>
+</mapper>

@@ -129,7 +129,11 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**/*.css.map", "anon");
         
         //大屏模板例子
-        filterChainDefinitionMap.put("/test/bigScreen/**", "anon");
+        filterChainDefinitionMap.put("/bigScreen/rvpNotify/SuccessByIsp", "anon");
+        filterChainDefinitionMap.put("/bigScreen/rvpNotify/countByChannel/**", "anon");
+        filterChainDefinitionMap.put("/bigScreen/rvpNotify/**", "anon");
+        filterChainDefinitionMap.put("/bigScreen/**", "anon");
+
         filterChainDefinitionMap.put("/bigscreen/template1/**", "anon");
         filterChainDefinitionMap.put("/bigscreen/template1/**", "anon");
         //filterChainDefinitionMap.put("/test/jeecgDemo/rabbitMqClientTest/**", "anon"); //MQ测试
@@ -154,6 +158,9 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filterMap);
         // <!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边
         filterChainDefinitionMap.put("/**", "jwt");
+
+        //短信通道接口排除
+//        filterChainDefinitionMap.put("/com.bigScreen/rvpNotify/*", "anon");
 
         // 未授权界面返回JSON
         shiroFilterFactoryBean.setUnauthorizedUrl("/sys/common/403");

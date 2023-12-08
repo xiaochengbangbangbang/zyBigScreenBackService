@@ -76,7 +76,7 @@
 
 	<modules>
         <module>jeecg-boot-base-core</module>
-        <module>jeecg-module-demo</module>
+<!--        <module>jeecg-module-demo</module>-->
         <module>jeecg-module-system</module>
 	</modules>
 
@@ -425,7 +425,7 @@
             </activation>
             <properties>
                 <!--当前环境-->
-                <profile.name>dev</profile.name>
+                <profile.name>prod</profile.name>
 				<!--Nacos服务地址-->
                 <config.server-addr>jeecg-boot-nacos:8848</config.server-addr>
 				<!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->

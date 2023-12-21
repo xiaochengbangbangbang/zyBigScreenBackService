@@ -88,5 +88,15 @@ public class RvpNotifyServiceImpl extends ServiceImpl<RvpNotifyMapper, RvpNotify
         return baseMapper.queryMapCountAll(endTime,ifSuccess);
     }
 
+    @Override
+    public Long queryCountAllByWy(String endTime) {
+        return baseMapper.queryCountAllByWy(endTime);
+    }
+
+    @Override
+    public Long querySuccessByWy(String endTime, boolean ifSuccess) {
+        return baseMapper.querySuccessByWy(endTime,ifSuccess);
+    }
+
 
 }

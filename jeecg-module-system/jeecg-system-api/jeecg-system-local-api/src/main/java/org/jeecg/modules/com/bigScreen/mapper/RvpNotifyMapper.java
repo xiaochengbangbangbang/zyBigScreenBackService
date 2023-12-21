@@ -23,5 +23,9 @@ public interface RvpNotifyMapper extends BaseMapper<RvpNotify> {
 
     List<MapDomain> queryMapCountAll(String endTime, boolean ifSuccess);
 
+    Long queryCountAllByWy(String endTime);
+
+    Long querySuccessByWy(String endTime, boolean ifSuccess);
+
 //    List<Map<String, Long>> queryTotalReceipt(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }

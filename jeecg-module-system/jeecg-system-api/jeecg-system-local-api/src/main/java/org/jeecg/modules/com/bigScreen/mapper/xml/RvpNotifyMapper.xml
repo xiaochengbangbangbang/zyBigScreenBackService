@@ -85,4 +85,17 @@
         GROUP BY province,isp
         ORDER BY province,isp;
     </select>
+    <select id="queryCountAllByWy" resultType="java.lang.Long">
+        select count(*)
+        from rvp_cmpp_ring
+        where create_time > #{endTime}
+    </select>
+    <select id="querySuccessByWy" resultType="java.lang.Long">
+        select count(*)
+        from rvp_cmpp_notify
+        where send_time >#{endTime}
+        <if test="ifSuccess == true">
+            and deliver_code='DELIVRD'
+        </if>
+    </select>
 </mapper>

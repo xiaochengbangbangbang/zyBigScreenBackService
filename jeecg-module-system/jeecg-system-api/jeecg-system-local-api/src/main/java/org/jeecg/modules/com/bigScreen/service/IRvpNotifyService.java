@@ -26,4 +26,8 @@ public interface IRvpNotifyService extends IService<RvpNotify> {
     List<ChannelLineDomain> queryIspCountAll(String endTime, Integer type, boolean ifSuccess);
 
     List<MapDomain> queryMapCountAll(String endTime, boolean ifSuccess);
+
+    Long queryCountAllByWy(String endTime);
+
+    Long querySuccessByWy(String endTime, boolean b);
 }

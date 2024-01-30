@@ -1,6 +1,7 @@
 package org.jeecg.modules.com.bigScreen.Domain;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class MapDomain {
@@ -16,4 +17,5 @@ public class MapDomain {
         this.isp = isp;
         this.count = count;
     }
+
 }

@@ -6,6 +6,42 @@
         <result column="shortSms" property="shortSms" />
         <result column="count" property="count" />
     </resultMap>
+    <resultMap id="rvpNotifyMap" type="org.jeecg.modules.com.bigScreen.entity.RvpNotify">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="billing_id" jdbcType="VARCHAR" property="billingId" />
+        <result column="call_in_number" jdbcType="VARCHAR" property="callInNumber" />
+        <result column="call_out_number" jdbcType="VARCHAR" property="callOutNumber" />
+        <result column="send_time" jdbcType="DATE" property="sendTime" />
+        <result column="deliver_code" jdbcType="VARCHAR" property="deliverCode" />
+        <result column="response_time" jdbcType="DATE" property="responseTime" />
+        <result column="mp_info" jdbcType="VARCHAR" property="mpInfo" />
+        <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+        <result column="return_time" jdbcType="DATE" property="returnTime" />
+        <result column="memo" jdbcType="VARCHAR" property="memo" />
+        <result column="memo1" jdbcType="VARCHAR" property="memo1" />
+        <result column="token" jdbcType="VARCHAR" property="token" />
+        <result column="short_sms" jdbcType="VARCHAR" property="shortSms" />
+        <result column="reciver_time" jdbcType="DATE" property="reciverTime" />
+        <result column="ischeck" jdbcType="VARCHAR" property="ischeck" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="realno" jdbcType="VARCHAR" property="realno" />
+        <result column="msgid" jdbcType="VARCHAR" property="msgid" />
+        <result column="sign" jdbcType="VARCHAR" property="sign" />
+        <result column="province" jdbcType="VARCHAR" property="province" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="isp" jdbcType="VARCHAR" property="isp" />
+        <result column="submit_code" jdbcType="VARCHAR" property="submitCode" />
+        <result column="deliver_time_str" jdbcType="VARCHAR" property="deliverTimeStr" />
+        <result column="deliver_reciver_time" jdbcType="DATE" property="deliverReciverTime" />
+        <result column="s_number" jdbcType="VARCHAR" property="sNumber" />
+        <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+        <result column="real_deliver_code" jdbcType="VARCHAR" property="realDeliverCode" />
+        <result column="real_number" jdbcType="VARCHAR" property="realNumber" />
+        <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+        <result column="receipt_msg" jdbcType="VARCHAR" property="receiptMsg" />
+        <result column="create_time" jdbcType="DATE" property="createTime" />
+    </resultMap>
+
     <select id="selectChannelLine" parameterType="java.lang.String" resultType="org.jeecg.modules.com.bigScreen.Domain.ChannelLineDomain">
         select count(*),short_sms
         FROM rvp_notify

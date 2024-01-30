@@ -194,11 +194,15 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             List<ChannelLineDomain> success = null;
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             List<Map<String, String>> times = new ArrayList<>(5);
 
             String endTime = df.format(date);
+            String format = df2.format(date);
 //        String endTime = "2023-04-26 10:07";
+
+//            String newKeyName = "Line:" + queryChannel + ":" + endTime;
             categories[4] = endTime.substring(11);
 //
             Calendar c = Calendar.getInstance();
@@ -230,7 +234,7 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
 //        times.add(timeMap4);
 //        Collections.reverse(times);
 
-            String keyName = "Line:" + queryChannel + ":" + startTime;
+            String keyName = "Line:" + queryChannel + ":" + format;
 //        String keyName = "Line:" + queryChannel + ":" + endTime;
             Gson gson = new Gson();
 
@@ -309,20 +313,21 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             resultObject.put("smsList", sms);
 
             jsonObject.put("data", resultObject);
-            String name = null;
-            for (Map.Entry<String, String> entry : times.get(4).entrySet()) {
-                name = entry.getValue();
-            }
-            keyName = "Line:" + queryChannel + ":" + name;
+//            String name = "";
+//            for (Map.Entry<String, String> entry : times.get(4).entrySet()) {
+//                name = entry.getValue();
+//            }
+//            String name = categories[4];
+//            keyName = "Line:" + queryChannel + ":" + name;
             List<String[]> strings = new ArrayList<>();
             strings.add(categories);
             strings.add(doubles);
             strings.add(sms);
             String json = gson.toJson(strings);
-            redisUtil.set(keyName, json, 90);
+            redisUtil.set(keyName, json, 300);
             jsonObject.put("code", 200);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
         return jsonObject;
     }
@@ -345,10 +350,13 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             String queryChannel = "wy106";
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             List<Map<String, String>> times = new ArrayList<>(5);
 
             String endTime = df.format(date);
+            String format = df2.format(date);
+//            String newKeyName = "Line:" + queryChannel + ":" + endTime;
 //        String endTime = "2023-04-26 10:07";
             categories[4] = endTime.substring(11);
 //
@@ -381,7 +389,7 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
 //        times.add(timeMap4);
 //        Collections.reverse(times);
 
-            String keyName = "Line:" + queryChannel + ":" + startTime;
+            String keyName = "Line:" + queryChannel + ":" + format;
 //        String keyName = "Line:" + queryChannel + ":" + endTime;
             Gson gson = new Gson();
 
@@ -454,21 +462,21 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             resultObject.put("failPercent", failPercent);
 
             jsonObject.put("data", resultObject);
-            String name = null;
-            for (Map.Entry<String, String> entry : times.get(4).entrySet()) {
-                name = entry.getValue();
-            }
-            keyName = "Line:" + queryChannel + ":" + name;
+//            String name = null;
+//            for (Map.Entry<String, String> entry : times.get(4).entrySet()) {
+//                name = entry.getValue();
+//            }
+//            keyName = "Line:" + queryChannel + ":" + name;
             List<String[]> strings = new ArrayList<>();
             strings.add(categories);
             strings.add(unKnownPercent);
             strings.add(successPercent);
             strings.add(failPercent);
             String json = gson.toJson(strings);
-            redisUtil.set(keyName, json, 90);
+            redisUtil.set(keyName, json, 300);
             jsonObject.put("code", 200);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
         return jsonObject;
     }
@@ -492,20 +500,22 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             wyAll = rvpNotifyService.queryCountAllByWy(endTime);
             wySuccess = rvpNotifyService.querySuccessByWy(endTime, true);
 
+            String[] strings = maps.stream().filter(channelLineDomain -> !channelLineDomain.getShortSms().equals("wy106")).map(channelLineDomain -> channelLineDomain.getShortSms()).collect(Collectors.toList()).toArray(new String[0]);
 
-            String[] strings = new String[5];
-            strings[0] = "xdr_msp_call_in_queue";
-            strings[1] = "xdr_migu_queue";
-            strings[2] = "xdr_msp_queue";
-            strings[3] = "xdr_smgp_proxy_queue";
-            strings[4] = "xdr_msp_free_queue";
+//            String[] strings = new String[6];
+//            strings[0] = "xdr_msp_call_in_queue";
+//            strings[1] = "xdr_migu_queue";
+//            strings[2] = "xdr_msp_queue";
+//            strings[3] = "xdr_smgp_proxy_queue";
+//            strings[4] = "xdr_msp_free_queue";
+//            strings[5] = "xdr_msp_yd_queue";
 
             List<ChannelLineDomain> newMap = new ArrayList<>(maps);
             List<ChannelLineDomain> newSuccessMap = new ArrayList<>(success);
 
             if (maps.size() == 0) {
                 addChannelQua(strings, maps, success, true);
-            } else if (maps.size() <= 5) {
+            } else {
                 if (success.size() == 0) {
                     addChannelQua(strings, maps, success, false);
                 } else {
@@ -529,13 +539,17 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
                 }
             }
 
-            Double[] percents = new Double[maps.size() + 1];
+            Double[] percents = new Double[maps.size() + 1];//加一是给wy106留位置
             String[] times = new String[maps.size() + 1];
             Long[] alls = new Long[maps.size() + 1];
+            Long successNum = 0L;
+            Long sendNum = 0L;
             for (int i = 0; i < maps.size() + 1; i++) {
                 if (i != maps.size()) {
                     Long big = Long.valueOf(maps.get(i).getCount());
                     Long small = Long.valueOf(success.get(i).getCount());
+                    successNum = successNum + small;
+                    sendNum = sendNum + big;
                     Double percent = getPercent(small, big);
                     int firstIndex = maps.get(i).getShortSms().indexOf("_");
                     int lastIndex = maps.get(i).getShortSms().lastIndexOf("_");
@@ -545,6 +559,8 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
                 } else {
                     times[i] = "wy106";
                     Double percent = getPercent(wySuccess, wyAll);
+                    successNum = successNum + wySuccess;
+                    sendNum = sendNum + wyAll;
                     percents[i] = percent;
                     alls[i] = wyAll;
                 }
@@ -555,10 +571,12 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             jsonObject.put("alls", alls);
             jsonObject.put("times", times);
             jsonObject.put("percents", percents);
+            jsonObject.put("successNum", successNum);
+            jsonObject.put("sendNum", sendNum);
 
             jsonObject.put("code", 200);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
         return jsonObject;
     }
@@ -582,6 +600,11 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             for (int i = 0; i < 2; i++) {
                 List<ChannelLineDomain> maps = this.rvpNotifyService.queryIspCountAll(endTime, Integer.valueOf(i), false);
                 List<ChannelLineDomain> success = this.rvpNotifyService.queryIspCountAll(endTime, Integer.valueOf(i), true);
+
+                maps = maps.stream().filter(p -> p.getShortSms().equals("CTCC") || p.getShortSms().equals("CMCC") || p.getShortSms().equals("CUCC")).collect(Collectors.toList());
+                success = success.stream().filter(p -> p.getShortSms().equals("CTCC") || p.getShortSms().equals("CMCC") || p.getShortSms().equals("CUCC")).collect(Collectors.toList());
+
+
                 List<ChannelLineDomain> newMap = new ArrayList<>(maps);
                 List<ChannelLineDomain> newSuccessMap = new ArrayList<>(success);
                 if (maps.size() == 0) {
@@ -631,17 +654,18 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
         return successProportionVos;
     }
 
     //地图
     @GetMapping(value = "/map")
-    public ProvinceMapVo[] map(@RequestParam(name = "id", required = false) String id) {
+    public JSONObject map(@RequestParam(name = "id", required = false) String id) {
         String[] provinces = {"北京", "天津", "上海", "重庆", "河北", "山西", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "海南", "四川", "贵州", "云南", "陕西", "甘肃", "青海", "台湾", "内蒙古", "广西", "西藏", "宁夏", "新疆"};
 
         ProvinceMapVo[] successProportionVos = new ProvinceMapVo[provinces.length];
+        JSONObject jsonObject = new JSONObject();
         try {
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -659,10 +683,12 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
             List<MapDomain> maps = rvpNotifyService.queryMapCountAll(endTime, false);
             List<MapDomain> success = rvpNotifyService.queryMapCountAll(endTime, true);
 
+//            Collections.sort(maps);
+
             int len = provinces.length * isps.length;
             if (maps.size() == 0) {
                 addMap(provinces, isps, maps, success, true);
-            } else if (maps.size() <= len) {
+            } else {
                 if (success.size() == 0) {
                     addMap(provinces, isps, maps, success, false);
                 } else {
@@ -680,7 +706,7 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
                             } else {
                                 maps.add(new MapDomain(name, name1, "0"));
                             }
-                            if (sucCollect != null && collect.size() > 0) {
+                            if (sucCollect != null && sucCollect.size() > 0) {
                                 MapDomain subAny = sucCollect.stream().filter(all -> name1.equals(all.getIsp())).findAny().orElse(null);
                                 if (subAny == null) {
                                     success.add(new MapDomain(name, name1, "0"));
@@ -700,34 +726,54 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
                 List<MapDomain> newSuccess = success.stream().filter(p -> p.getProvince().equals(pro)).collect(Collectors.toList());
                 ProvinceMapVo provinceMapVo = new ProvinceMapVo();
                 provinceMapVo.setName(pro);
+                Long allCnt = 0L;
                 for (int i1 = 0; i1 < isps.length; i1++) {
                     String tempName = isps[i1];
                     MapDomain any = newMaps.stream().filter(all -> tempName.equals(all.getIsp())).findAny().orElse(null);
                     MapDomain suc = newSuccess.stream().filter(all -> tempName.equals(all.getIsp())).findAny().orElse(null);
                     switch (tempName) {
                         case "CUCC":
-                            provinceMapVo.setValue(Long.valueOf(any.getCount()));
-                            Double percent = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
-                            provinceMapVo.setPercentage(percent + "%");
+                            if(any != null && suc != null){
+                                allCnt = allCnt + Long.valueOf(any.getCount());
+                                provinceMapVo.setValue(Long.valueOf(any.getCount()));
+                                Double percent = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
+                                provinceMapVo.setPercentage(percent + "%");
+                            }
                             break;
                         case "CTCC":
-                            provinceMapVo.setValue2(Long.valueOf(any.getCount()));
-                            Double percent1 = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
-                            provinceMapVo.setPercentage2(percent1 + "%");
+                            if(any != null && suc != null) {
+                                allCnt = allCnt + Long.valueOf(any.getCount());
+                                provinceMapVo.setValue2(Long.valueOf(any.getCount()));
+                                Double percent1 = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
+                                provinceMapVo.setPercentage2(percent1 + "%");
+                            }
                             break;
                         case "CMCC":
-                            provinceMapVo.setValue3(Long.valueOf(any.getCount()));
-                            Double percent2 = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
-                            provinceMapVo.setPercentage3(percent2 + "%");
+                            if(any != null && suc != null) {
+                                allCnt = allCnt + Long.valueOf(any.getCount());
+                                provinceMapVo.setValue3(Long.valueOf(any.getCount()));
+                                Double percent2 = getPercent(Long.valueOf(suc.getCount()), Long.valueOf(any.getCount()));
+                                provinceMapVo.setPercentage3(percent2 + "%");
+                            }
                             break;
                     }
                 }
+                provinceMapVo.setAllCnt(allCnt);
                 successProportionVos[i] = provinceMapVo;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
         }
-        return successProportionVos;
+
+//        List<ProvinceMapVo> provinceMapVos = Arrays.asList(successProportionVos);
+        List<ProvinceMapVo> provinceMapVos = Arrays.stream(successProportionVos).collect(Collectors.toList());
+        log.info("--------map整理前的数据长度---"+provinceMapVos.size());
+        Collections.sort(provinceMapVos);
+        jsonObject.put("first",provinceMapVos.get(0).getName());
+        jsonObject.put("second",provinceMapVos.get(1).getName());
+        jsonObject.put("third",provinceMapVos.get(2).getName());
+        jsonObject.put("successProportionVos",successProportionVos);
+        return jsonObject;
     }
 
     private static Double getPercent(Long x, Long y) {
@@ -786,7 +832,7 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
 
         if (alls.size() == 0) {
             addChannelLine(alls, success, true);
-        } else if (alls.size() <= 2) {
+        } else {
             if (success.size() == 0) {
                 addChannelLine(alls, success, false);
             } else {
@@ -815,5 +861,6 @@ public class RvpNotifyController extends JeecgController<RvpNotify, IRvpNotifySe
         jsonObject.put("success", success);
         return jsonObject;
     }
+
 
 }
